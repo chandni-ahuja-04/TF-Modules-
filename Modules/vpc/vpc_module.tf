@@ -11,7 +11,7 @@ provider "aws" {
 }
 #vpc
 resource "aws_vpc" "myvpc" {
-  cidr_block       = "10.0.0.0/16"
+  cidr_block       = var.vpc_cidr
   instance_tenancy = "default"
 
   tags = {
@@ -22,8 +22,8 @@ resource "aws_vpc" "myvpc" {
 #subnets
 resource "aws_subnet" "mypubsub1" {
   vpc_id     = aws_vpc.myvpc.id
-  cidr_block = "10.0.0.0/24"
-  availability_zone = "us-east-1a"
+  cidr_block = var.subnet_pu_1
+  availability_zone = var.zone1
 
   tags = {
     Name = "public1"
@@ -32,8 +32,8 @@ resource "aws_subnet" "mypubsub1" {
 
 resource "aws_subnet" "mypubsub2" {
   vpc_id     = aws_vpc.myvpc.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "us-east-1b"
+  cidr_block = var.subnet_pu_2
+  availability_zone = var.zone2
 
   tags = {
     Name = "public2"
@@ -42,8 +42,8 @@ resource "aws_subnet" "mypubsub2" {
 
 resource "aws_subnet" "mypvtsub1" {
   vpc_id     = aws_vpc.myvpc.id
-  cidr_block = "10.0.2.0/24"
-  availability_zone = "us-east-1a"
+  cidr_block = var.subnet_pr_1
+  availability_zone = var.zone1
 
   tags = {
     Name = "private1"
@@ -52,8 +52,8 @@ resource "aws_subnet" "mypvtsub1" {
 
 resource "aws_subnet" "mypvtsub2" {
   vpc_id     = aws_vpc.myvpc.id
-  cidr_block = "10.0.3.0/24"
-  availability_zone = "us-east-1b"
+  cidr_block = var.subnet_pr_2
+  availability_zone = var.zone2
 
   tags = {
     Name = "private2"
@@ -91,7 +91,7 @@ resource "aws_route_table" "route1" {
   vpc_id = aws_vpc.myvpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.route_cidr
     gateway_id = aws_internet_gateway.igw.id
   }
 
@@ -104,7 +104,7 @@ resource "aws_route_table" "route2" {
   vpc_id = aws_vpc.myvpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block = var.route_cidr
     nat_gateway_id = aws_nat_gateway.example.id
   }
 
